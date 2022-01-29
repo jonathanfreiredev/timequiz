@@ -64,7 +64,7 @@ export default function TimeQuizzGame(){
 
     const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY_PUSHER, {
         cluster: "eu",
-        authEndpoint: "http://localhost:3000/api/pusher/auth",
+        authEndpoint: "https://timequiz.jonathanfreire.com/api/pusher/auth",
         forceTLS: true,
     });
     /* Handles */
