@@ -61,10 +61,11 @@ export default function TimeQuizzGame(){
 
     const [session, loading] = useSession();
     const numQuestions = 5;
+    const dev = process.env.NODE_ENV === "development" ? "http://localhost:3000/" : "https://timequiz.jonathanfreire.com/";
 
     const pusher = new Pusher(process.env.NEXT_PUBLIC_KEY_PUSHER, {
         cluster: "eu",
-        authEndpoint: "https://timequiz.jonathanfreire.com/api/pusher/auth",
+        authEndpoint:`${dev}/api/pusher/auth`,
         forceTLS: true,
     });
     /* Handles */

@@ -16,7 +16,7 @@ export default NextAuth({
         api: {label: "Api", type: "text"},
       },
       async authorize(credentials, req) {
-        const dev = process.env.NODE_ENV === "development" ? "http://localhost:3000/api" : "https://socialart.jonathanfreire.com/api";
+        const dev = process.env.NODE_ENV === "development" ? "http://localhost:3000/api" : "https://timequiz.jonathanfreire.com/api";
         const res = await fetch(dev + "/loginorsignup", {
           method: 'POST',
           body: JSON.stringify(credentials),
