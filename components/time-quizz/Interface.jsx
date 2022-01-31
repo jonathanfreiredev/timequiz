@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react"
-import Head from "next/head"
+import { useEffect, useState, useRef } from "react"
 import Pusher from "pusher-js"
 import SendMessage from "../../components/time-quizz/SendMessage"
 import OptionsGame from "../../components/time-quizz/OptionsGame"
@@ -34,6 +33,7 @@ export default function TimeQuizzGame(){
     const [hearts, setHearts] = useState([]);
     const [resultsGame, setResultsGame] = useState([]);
     const [winner, setWinner] = useState();
+    const refMessages = useRef(null);
 
     const descriptionProject= "Time quizz is a game of questions to play in real-time with connected people. So, invite your friends to this public room. Also, you can talk with the people using the chat to decide a category and make it funnier."
     const accordionInfo = [
@@ -69,6 +69,9 @@ export default function TimeQuizzGame(){
         forceTLS: true,
     });
     /* Handles */
+    const handleSliderMessages = ()=>{
+      refMessages.current.scrollTop = refMessages.current.scrollHeight - refMessages.current.clientHeight;
+    }
     const handleChatSubmit = (e) => {
       e.preventDefault();
       postData({
@@ -297,6 +300,7 @@ export default function TimeQuizzGame(){
                 ...prevState,
                 { username, message },
             ]);
+            handleSliderMessages();
         });
         // update the complete chat
         channel.bind("complete-chat-update", (data)=>{
@@ -471,7 +475,7 @@ export default function TimeQuizzGame(){
                 </div>
                 <div className={styles.containerElement}>
                     <div className={styles.chat}>
-                        <div className={styles.messages}>
+                        <div className={styles.messages} ref={refMessages}>
                             {chats.map((chat, index) => {
                             return <ChatList key={index} chat={chat} currentUser={username} />
                             })}
