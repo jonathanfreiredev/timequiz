@@ -27,7 +27,8 @@
                 padding: 0 5px;
                 user-select: none;
                 cursor: default;
-                width: 64px;
+                width: 80px !important; // it needs it in production
+                height: 80px;
                 &:hover{
                     transition: 0s;
                     color: #ffffff;
