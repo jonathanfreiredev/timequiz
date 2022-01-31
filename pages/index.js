@@ -1,5 +1,6 @@
 import Head from "next/head"
 import Layout from "../components/Layout"
+import Loading from "../components/Loading"
 import Interface from "../components/time-quizz/Interface"
 import { useSession } from "next-auth/client"
 
@@ -7,7 +8,7 @@ export default function TimeQuizz() {
   const [session, loading] = useSession();
 
   if(loading){
-    return <div>Loading...</div>
+    return <Loading />
   }
   return <div>
   <Head>
