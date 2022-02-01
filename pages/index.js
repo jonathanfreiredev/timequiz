@@ -15,7 +15,7 @@ export default function TimeQuizz() {
     <title>Time quizz - Jonathan Freire</title>
     <meta name="description" content="A real time game of questions" />
   </Head>
-  <Layout title="Time Quiz." refTitle="/">
+  <Layout title="Time Quiz." subtitle="Jonathan Freire." refTitle="/">
     <Interface />
   </Layout>
   </div>
