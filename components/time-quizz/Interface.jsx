@@ -475,10 +475,13 @@ export default function TimeQuizzGame(){
                 </div>
                 <div className={styles.containerElement}>
                     <div className={styles.chat}>
+                        <div className={styles.advice}>
+                          <p>I recommend you to not share personal data.</p>
+                        </div>
                         <div className={styles.messages} ref={refMessages}>
-                            {chats.map((chat, index) => {
-                            return <ChatList key={index} chat={chat} currentUser={username} />
-                            })}
+                          {chats.map((chat, index) => {
+                          return <ChatList key={index} chat={chat} currentUser={username} />
+                          })}
                         </div>
                         <div>
                             <SendMessage
