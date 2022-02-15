@@ -23,7 +23,7 @@ export default function Navbar({title, subtitle, refTitle}){
         },
         profile:{
             name: "Profile.",
-            link: "/profile"
+            link: "https://socialart.jonathanfreire.com"
         },
         signin:{
             name: "Sign in",
