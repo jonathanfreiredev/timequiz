@@ -30,12 +30,8 @@ This project was built using these technologies.
 - Node.js
 - Next.js
 - Pusher.js
-- NextAuth.js
-- mongoose
-- crypto
 - uuid
 - Sass
-- react-cookie-consent
 - VsCode
 - Vercel
 
@@ -44,8 +40,6 @@ This project was built using these technologies.
 **🎨 Styled with SCSS**
 
 **📱 Fully Responsive**
-
-**🛡 Authentication with NextAuth**
 
 **Websockets with Pusher.js**
 
@@ -56,8 +50,8 @@ Clone down this repository. You will need `node.js` and `git` installed globally
 ## 🛠 Installation and Setup Instructions
 
 1. Installation: `npm install`
-2. You have to create a .env.development file in the parameters: `MONGODB_URI`,`SECRET`, `JWT_SIGNING_PRIVATE_KEY`, `APP_ID_PUSHER`, `KEY_PUSHER`, `SECRET_PUSHER`, `CLUSTER_PUSHER` and `NEXT_PUBLIC_KEY_PUSHER`. And also: `NEXTAUTH_URL="http://localhost:3000"`.
-You will need to create an account in MongoDB and Pusher.
+2. You have to create a .env.development file in the parameters: `APP_ID_PUSHER`, `KEY_PUSHER`, `SECRET_PUSHER`, `CLUSTER_PUSHER` and `NEXT_PUBLIC_KEY_PUSHER`.
+You will need to create an account in Pusher.
 2. In the project directory, you can run: `npm start` or `npm run dev`
 
 Runs the app in the development mode.\

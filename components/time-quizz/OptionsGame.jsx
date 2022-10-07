@@ -51,6 +51,6 @@ export default function OptionsGame({selectedCategories, onSelectedCategory, sel
                     <FontAwesomeIcon icon={faChevronDown} />
                 </button>
             </div>
-            <p className={styles.explication}>{timer ? `The game start in ${seconds}.\nRemove your selected or select another category to stop the time.` : "The game start when all of you choose the same category.\nOnly if you finish with live, you can added points to you."}</p>
+            <p className={styles.explication}>{timer ? `The game start in ${seconds}.\nRemove your selected or select another category to stop the time.` : "The game start when all of you choose the same category.\nIf you end up alive, you will get 2 extra points."}</p>
         </div>
 }

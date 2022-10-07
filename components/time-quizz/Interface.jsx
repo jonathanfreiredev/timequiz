@@ -5,15 +5,14 @@ import OptionsGame from "../../components/time-quizz/OptionsGame"
 import ChatList from "../../components/time-quizz/ChatList"
 import Game from "../../components/time-quizz/Game"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCrown, faHeart, faTrophy } from '@fortawesome/free-solid-svg-icons'
+import { faCrown, faHeart, faTrophy, faChevronRight, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import styles from "../../styles/time-quizz/TimeQuizzGame.module.scss"
-import { useSession } from "next-auth/client"
 import Invitation from "../../components/time-quizz/Invitation"
 import DescriptionProject from "../../components/DescriptionProject"
-import LoginRequest from "../../components/LoginRequest"
+import Avatar from "../Avatar"
 import cn from "classnames"
 
-export default function TimeQuizzGame(){
+export default function TimeQuizzGame({descriptionProject, accordionInfo}){
     const [chats, setChats] = useState([]);
     const [messageToSend, setMessageToSend] = useState("");
     const [onlineUsersCount, setOnlineUsersCount] = useState(0);
@@ -27,39 +26,20 @@ export default function TimeQuizzGame(){
     const [isACategorySelectedByUser, setIsACategorySelectedByUser] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [username, setUsername] = useState("");
+    const [errorUsername, setErrorUsername] = useState("");
+    const [usernameChoosing, setUsernameChoosing] = useState("");
+    const [isUserOnline, setIsUserOnline] = useState(false);
     const [timer, setTimer] = useState(false);
     const [startGame, setStartGame] = useState(false);
     const [questionsGame, setQuestionsGame] = useState([]);
     const [hearts, setHearts] = useState([]);
     const [resultsGame, setResultsGame] = useState([]);
     const [winner, setWinner] = useState();
+    const [selectedAvatar, setSelectedAvatar] = useState("joe");
+    const refAvatars = useRef(null);
+    const avatars = ["james", "jerry", "joe", "jeri", "jazebelle", "jude", "jacques", "jocelyn", "josephine", "jabala", "jake", "josh", "jess", "jodi", "jai", "jordan", "jon", "jeane", "julie", "jana", "jia", "jane", "jean", "jolee", "jed", "jaqueline", "jenni", "jack"]
     const refMessages = useRef(null);
 
-    const descriptionProject= "Time quizz is a game of questions to play in real-time with connected people. So, invite your friends to this public room. Also, you can talk with the people using the chat to decide a category and make it funnier."
-    const accordionInfo = [
-      {
-        title: "Is my user account safely?",
-        content: "Yes, username and password are stored safely with MongoDB like database and NextAuth.js for authentication. Also, the password is encrypted using SHA-2 which is a cryptographic hash function. That makes it impossible to crack. Despite this, it is recommended not to use either weak passwords or passwords used in other apps. Remember, this app is not commercial and is my own project in order to show my abilities to recruiters. So, please do not use real personal data."
-      },
-      {
-        title: "How can I play with other people?",
-        content: "You can play with connected players. You can also invite friends to the room using the link above. You can also play alone if no one is in the room."
-      },
-      {
-        title: "I am a recruiter. I want to try multiplayer mode.",
-        content: "Then I recommend you to have two open windows simultaneously with two different users to test the performance of the game and the chat in multiplayer mode. Notice that the chat messages, game questions, connected users' points and selected categories are shared among all connected users. That is possible thanks to Pusher.js, which is a library that allows data transfer using sockets safely and quickly."
-      },
-      {
-        title: "Are chat and game information stored in a database?",
-        content: "No. It is not a commercial game. So it is not necessary to save the data for future rounds. But, if several users are connected but someone reloads the page, this one will recover all the data again thanks to the other connected users because they have this information. This method is safe and free of database use. However, if you are playing alone and you reload the page, it will be understood that there is no user connected during that time. So data will be lost."
-      },
-      {
-        title: "How were the questions and answers chosen?",
-        content: "To get them, I use Trivia API (https://opentdb.com/api_config.php). This game translates the questions and their answers into natural language and orders the answers randomly.",
-      }
-    ];
-
-    const [session, loading] = useSession();
     const numQuestions = 5;
     const dev = process.env.NODE_ENV === "development" ? "http://localhost:3000/" : "https://timequiz.jonathanfreire.com/";
 
@@ -67,8 +47,28 @@ export default function TimeQuizzGame(){
         cluster: "eu",
         authEndpoint:`${dev}/api/pusher/auth`,
         forceTLS: true,
+        auth: {
+          params: {
+            username: username,
+            image: `https://joeschmoe.io/api/v1/${selectedAvatar}`
+          }
+        }
     });
     /* Handles */
+    const handleUsername = (e)=>{
+      setUsernameChoosing(e.target.value);
+    }
+
+    const handleSubmitUsername = ()=>{
+      if(usernameChoosing == "") {
+        setErrorUsername("Introduce your name");
+      }else{
+        setErrorUsername("");
+        setUsername(usernameChoosing);
+        setUsernameChoosing("");
+        setIsUserOnline(true);
+      }
+    }
     const handleSliderMessages = ()=>{
       refMessages.current.scrollTop = refMessages.current.scrollHeight - refMessages.current.clientHeight;
     }
@@ -80,6 +80,15 @@ export default function TimeQuizzGame(){
       }, "chat-update");
       setMessageToSend("");
     };
+
+    /* User form */
+    const handleMoveAvatars = (value)=>{
+      refAvatars.current.scrollLeft += value;
+    }
+    const handleSelectedAvatar = (value)=>{
+        setSelectedAvatar(value);
+    }
+
     const handleHearts = async (heartsCopy)=>{
       await postData(heartsCopy, "hearts-game-update");
     }
@@ -245,12 +254,13 @@ export default function TimeQuizzGame(){
     const handleBackToMenu = (isWinner, numRightQuestions)=>{
       setStartGame(false);
       setQuestionsGame([]);
+      let resultsGameCopy = JSON.parse(JSON.stringify(resultsGame));
+      const index = resultsGameCopy.findIndex(e => e.username === username);
+      resultsGameCopy[index].gamesWon += numRightQuestions;
       if(isWinner){
-        let resultsGameCopy = JSON.parse(JSON.stringify(resultsGame));
-        const index = resultsGameCopy.findIndex(e => e.username === username);
-        resultsGameCopy[index].gamesWon += numRightQuestions;
-        postData(resultsGameCopy, "results-game-update");
+        resultsGameCopy[index].gamesWon += 2;
       }
+      postData(resultsGameCopy, "results-game-update");
     }
 
     /* Post */
@@ -263,8 +273,9 @@ export default function TimeQuizzGame(){
     }
 
     useEffect(() => {
+      if(isUserOnline){
+        setIsUserOnline(false);
         const channel = pusher.subscribe(`presence-chat-time-quizz`);
-
         /* Update members using the members of the channel */
         const updateMembers = ()=>{
           const array = Object.values(channel.members.members).map((memb)=>{
@@ -336,11 +347,8 @@ export default function TimeQuizzGame(){
         return () => {
             pusher.unsubscribe("presence-chat");
         };
-    }, []);
-
-    useEffect(()=>{
-        setUsername(session ? session.user.name : "");
-    },[session]);
+      }
+    }, [isUserOnline]);
 
     useEffect(()=>{
       if(isNewUserOnline){
@@ -425,19 +433,34 @@ export default function TimeQuizzGame(){
       }
     },[questionsGame]);
 
-    if(loading){
-        return <div>Loading...</div>
-    }
-
     return <div>
         <div className={styles.root}>
-            <h3>Hi {username}</h3>
-            {!session ?
-                <LoginRequest text="You have to be logged to play this game." />
+            <h3>Hi {username == "" ? usernameChoosing : username}!</h3>
+            {username == "" ? 
+              <div className={styles.formUser}>
+                <p>{"Say your name and choose an avatar"}</p>
+                <div className={styles.carrouselUserForm}>
+                  <button type="button" className={cn(styles.carrouselArrowUserForm, styles.carrouselArrowPrevUserForm)} onClick={()=>handleMoveAvatars(-92)}>
+                      <FontAwesomeIcon icon={faChevronLeft} />
+                  </button>
+                  <div className={styles.avatars} ref={refAvatars}>
+                      {avatars.map((avatar, index) => <Avatar key={index} name={avatar} width={"70px"} height={"70px"} selectedAvatar={selectedAvatar} onSelectedAvatar={handleSelectedAvatar} />)}
+                  </div>
+                  <button type="button" className={cn(styles.carrouselArrowUserForm, styles.carrouselArrowNextUserForm)} onClick={()=>handleMoveAvatars(92)}>
+                      <FontAwesomeIcon icon={faChevronRight} />
+                  </button>
+                </div>
+                <div className={styles.inputUserForm}>
+                  <label htmlFor="username"></label>
+                  <input type="text" id="username" name="username" placeholder="Name" value={usernameChoosing} onChange={handleUsername} autoComplete="off" />
+                </div>
+                <button className={styles.buttonUserForm} onClick={handleSubmitUsername} type="button">OK</button>
+                {errorUsername && <p className={styles.errorUsername}>{errorUsername}</p>}
+              </div>
             :
-                <Invitation />
+              <Invitation />
             }
-            <div className={!session ? cn(styles.container, styles.disabledContainer): styles.container}>
+            <div className={username=="" ? cn(styles.disabledContainer,styles.container) : styles.container}>
                 <div className={styles.usersOnline}>
                 {onlineUsers.map((user, index)=>{
                     return <div key={index} className={styles.containerAvatar}>
@@ -466,32 +489,32 @@ export default function TimeQuizzGame(){
                 }
                 </div>
                 <div className={styles.containerGame}>
-                <div className={styles.containerElement}>
-                    {startGame ?
-                    <Game username={username} category={selectedCategoryByAllUsers} categoryText={selectedCategoryTextByAllUsers} postData={postData} questions={questionsGame} numQuestions={numQuestions} onBackToMenu={handleBackToMenu} onHearts={handleHearts} hearts={hearts} /> 
-                    :
-                    <OptionsGame selectedCategories={selectedCategories} onSelectedCategory={handleSelectedCategory} selectedCategoryByUser={selectedCategoryText} onlineUsersCount={onlineUsersCount} timer={timer} onStartGame={handleStartGame} />
-                    }
-                </div>
-                <div className={styles.containerElement}>
-                    <div className={styles.chat}>
-                        <div className={styles.advice}>
-                          <p>I recommend you to not share personal data.</p>
-                        </div>
-                        <div className={styles.messages} ref={refMessages}>
-                          {chats.map((chat, index) => {
-                          return <ChatList key={index} chat={chat} currentUser={username} />
-                          })}
-                        </div>
-                        <div>
-                            <SendMessage
-                            message={messageToSend}
-                            handleMessageChange={(e) => setMessageToSend(e.target.value)}
-                            handleSubmit={(e) => handleChatSubmit(e)}
-                            />
-                        </div>
-                    </div>
-                </div>
+                  <div className={styles.containerElement}>
+                      {startGame ?
+                      <Game username={username} category={selectedCategoryByAllUsers} categoryText={selectedCategoryTextByAllUsers} postData={postData} questions={questionsGame} numQuestions={numQuestions} onBackToMenu={handleBackToMenu} onHearts={handleHearts} hearts={hearts} /> 
+                      :
+                      <OptionsGame selectedCategories={selectedCategories} onSelectedCategory={handleSelectedCategory} selectedCategoryByUser={selectedCategoryText} onlineUsersCount={onlineUsersCount} timer={timer} onStartGame={handleStartGame} />
+                      }
+                  </div>
+                  <div className={styles.containerElement}>
+                      <div className={styles.chat}>
+                          <div className={styles.advice}>
+                            <p>I recommend you to not share personal data.</p>
+                          </div>
+                          <div className={styles.messages} ref={refMessages}>
+                            {chats.map((chat, index) => {
+                            return <ChatList key={index} chat={chat} currentUser={username} />
+                            })}
+                          </div>
+                          <div>
+                              <SendMessage
+                              message={messageToSend}
+                              handleMessageChange={(e) => setMessageToSend(e.target.value)}
+                              handleSubmit={(e) => handleChatSubmit(e)}
+                              />
+                          </div>
+                      </div>
+                  </div>
                 </div>
             </div>
         </div>
