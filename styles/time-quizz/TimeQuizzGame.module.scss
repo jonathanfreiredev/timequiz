@@ -33,8 +33,88 @@
     margin-bottom: 20px;
 }
 .disabledContainer{
+    display: none;
     pointer-events: none;
     opacity: 0.4;
+}
+
+/* User form */
+.formUser{
+    width: 90%;
+    margin: 10px auto 100px;
+}
+.inputUserForm{
+    display: flex;
+    width: 90%;
+    max-width: 300px;
+    margin: 0 auto 20px;
+    input{
+        width: 100%;
+        padding: 10px;
+        outline: none;
+        border: 1.5px solid rgb(186, 186, 186);
+        border-radius: 10px;
+        text-align: center;
+        font-size: 1rem;
+    }
+}
+.buttonUserForm{
+    border: none;
+    width: 90%;
+    max-width: 300px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgb(134, 115, 255);
+    color: #fff;
+    cursor: pointer;
+}
+.carrouselUserForm{
+    position: relative;
+    display: flex;
+    margin: 20px auto;
+    width: 95%;
+    align-items: center;
+    justify-content: center;
+}
+.carrouselArrowUserForm{
+    position: relative;
+    z-index: 4;
+    border-radius: 30px;
+    background-color: rgba(255, 255, 255, 0.591);
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.15);
+    border: 0;
+    cursor: pointer;
+}
+.carrouselArrowUserForm:focus{
+    outline: 0;
+}
+.carrouselArrowUserForm svg{
+    width: 12px;
+    height: 100%;
+    color: rgba(0,0,0,.7);
+}
+.carrouselArrowPrevUserForm{
+    left: 2px;
+}
+.carrouselArrowNextUserForm{
+    right: 2px;
+}
+.avatars{
+    display: flex;
+    width: 90%;
+    transition: .5 ease-in-out;
+    overflow-x: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+}
+.avatars::-webkit-scrollbar{
+    display: none;
+}
+.errorUsername{
+    color: rgb(254, 66, 66);
 }
 
 /* Game */
