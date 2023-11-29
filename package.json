@@ -1,8 +1,11 @@
 {
   "name": "time-quiz",
   "private": true,
+  "engines": {
+    "node": "18.x"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev", 
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
