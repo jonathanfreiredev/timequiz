@@ -50,7 +50,7 @@ export default function TimeQuizzGame({descriptionProject, accordionInfo}){
         auth: {
           params: {
             username: username,
-            image: `https://joeschmoe.io/api/v1/${selectedAvatar}`
+            image: `https://joesch.moe/api/v1/${selectedAvatar}`
           }
         }
     });
